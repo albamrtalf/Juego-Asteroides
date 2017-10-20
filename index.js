@@ -1,7 +1,7 @@
 var fs=require("fs");
-var config=JSON.parse(fs.readFileSync("config.json"));
-var host=config.host;
-var port=config.port;
+//var config=JSON.parse(fs.readFileSync("config.json"));
+//var host=config.host;
+//var port=config.port;
 var exp=require("express");
 var app=exp(); // El tutorial indicaba exp.createServer()
 var http = require('http').Server(app);
@@ -10,6 +10,11 @@ var modelo = require('./servidor/modelo.js');
 var juego = new modelo.Juego(); // Importo juego
 
 app.use(exp.static(__dirname + "/cliente"));
+
+[16:41, 20/10/2017] Leo IS uni: app.set('port', (process.env.PORT || 5000));
+http.listen(app.set('port'), function(){
+    console.log('Servidor escuchando en ', app.get('port'));
+});
 
 // El get() que hace el navegador al servidor
 app.get("/",function(request,response){
