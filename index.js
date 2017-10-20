@@ -11,7 +11,7 @@ var juego = new modelo.Juego(); // Importo juego
 
 app.use(exp.static(__dirname + "/cliente"));
 
-[16:41, 20/10/2017] Leo IS uni: app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 5000));
 http.listen(app.set('port'), function(){
     console.log('Servidor escuchando en ', app.get('port'));
 });
