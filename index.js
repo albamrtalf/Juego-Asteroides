@@ -23,8 +23,8 @@ app.get("/",function(request,response){
 	response.send(contenido);
 });
 
-console.log("Servidor escuchando en "+host+":"+port);
-http.listen(port,host);
+//console.log("Servidor escuchando en "+host+":"+port);
+//http.listen(port,host);
 
 // function randomInt(low, hight){
 // 	return Math.floor(Math.random() * (hight - low) + low);
