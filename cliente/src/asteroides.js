@@ -6,7 +6,8 @@ function Juego(){
     this.naveLocal;
     this.veggies;
     this.fin = false;
-
+    this.marcador;
+    this.rival;
     this.preload=function() {
        game.load.image('espacio', '../img/deep-space.jpg');
        game.load.image('disparo', '../img/bullets.png');
@@ -47,13 +48,19 @@ function Juego(){
         this.cursors = game.input.keyboard.createCursorKeys();
         game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
         //game.input.addPointer();
-        
+        this.marcador = game.add.text(game.world.centerX, 25, "Puntos. Yo: 0 - Rival: 0", {
+            font: "25px Arial",
+            fill: "#FDFEFE",
+            align: "center"
+        });
+        this.marcador.anchor.setTo(0.5, 0.5);
         cliente.nuevoJugador();
         
         //this.nave=new Nave(0,300,300);
         //this.naves[id]=nave;        
 
     }
+
     this.collisionHandler = function(bullet, veg) { 
         if (veg.frame == this.naveLocal.veggie){ // Solo controlamos el pimiento, que es el numero 17
             console.log("ñam ñam"); // En caso de colision con algun grupo de hortaliza
@@ -105,20 +112,32 @@ function Juego(){
                 this.screenWrap(nave.sprite);
                  
                 nave.bullets.forEachExists(this.screenWrap, this); 
-                }
+                this.actualizarMarcador();
+            }
         }
     }
-
+    this.actualizarMarcador=function(){
+       this.marcador.setText("Puntos. Yo:" +this.naveLocal.puntos + "- Rival:"+this.rival.puntos);
+       game.world.bringToTop(this.marcador);
+    }
     this.agregarJugador = function(id, x, y, veggies){
         console.log('nuevo usuario');
         var nave = new Nave(id,x,y,veggies);
         this.naves[id] = nave;
-        this.naveLocal = this.naves[cliente.id];
+        if (id==cliente.id){
+            this.naveLocal=this.naves[cliente.id];
+        }
+        else{
+            this.rival=nave;
+        }
     }
 
-    this.moverNave=function(id,x,y,ang){        
-        var nave=this.naves[id];
-        nave.mover(x,y,ang,true);        
+    this.moverNave=function(data){ 
+      var nave=this.naves[data.id];
+      nave.puntos=data.puntos;
+      nave.mover(data.x,data.y,data.ang,true); 
+      this.rival=nave;
+      this.actualizarMarcador();
     }
 
     this.finalizar = function(data) {

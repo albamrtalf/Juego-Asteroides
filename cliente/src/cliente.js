@@ -37,7 +37,7 @@ function Cliente(){
 			}
 		});
 		this.socket.on('movimiento',function(data){ 
-		    juego.moverNave(data.id,data.x,data.y,data.ang); 
+		    juego.moverNave(data); 
 		});
 	} // Fin lanzarSocketSrv
 	this.ini();
