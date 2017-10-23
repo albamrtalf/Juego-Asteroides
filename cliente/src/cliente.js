@@ -18,10 +18,10 @@ function Cliente(){
 		this.socket.on('faltaUno', function(data) {
 			console.log('Falta un jugador');
 		});
-		this.socket.on('aJugar', function(dtata) {
+		this.socket.on('aJugar', function(data) {
 			for(var jug in data) {
 				console.log('aJugar: ', data[jug]);
-				juego.agregarJugador(data[jug].id, data[jug],x, data[jug].y, data[jug].veggie);
+				juego.agregarJugador(data[jug].id, data[jug].x, data[jug].y, data[jug].veggie);
 			}
 		});
 		this.socket.on('final', function(data) {

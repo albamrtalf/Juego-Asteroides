@@ -10,7 +10,7 @@ function Juego() {
 	this.puedeAgregarJugador = function(id) {
 		this.jugadores[id] = new Jugador(id, this.veggie);
 		this.veggie++;
-		if (Object.keys(this.jugadores).lenght >= 2) {
+		if (Object.keys(this.jugadores).length >= 2) {
 			this.estado = new Jugar();
 			this.enviarAJugar();
 		} else {

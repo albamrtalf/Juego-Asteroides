@@ -55,7 +55,7 @@ function Juego(){
 
     }
     this.collisionHandler = function(bullet, veg) { 
-        if (veg.frame == this.navesLocal.veggie){ // Solo controlamos el pimiento, que es el numero 17
+        if (veg.frame == this.naveLocal.veggie){ // Solo controlamos el pimiento, que es el numero 17
             console.log("ñam ñam"); // En caso de colision con algun grupo de hortaliza
             this.naveLocal.puntos++;
             veg.kill();
