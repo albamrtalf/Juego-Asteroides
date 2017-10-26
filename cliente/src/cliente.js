@@ -2,6 +2,10 @@ function Cliente(){
 
 	this.socket;
 	this.id;
+	this.coord;
+	this.cargarConfiguracion = function() {
+		this.socket.emit('configuracion');
+	}
 	this.nuevoJugador = function() {
 		this.socket.emit('nuevoJugador', {id:this.id}); // El cliente se queda esperando
 
@@ -14,14 +18,25 @@ function Cliente(){
 		this.socket = io.connect();
 		//this.lanzarSocketSrv(); // Se puede llamar aqui o en ini.js
 	} // Fin ini
+	this.volverAJugar = function() {
+		this.socket.emit('volverAJugar');
+	}
+	this.reset=function(){
+		this.id=randomInt(1,10000);
+	};
 	this.lanzarSocketSrv = function(){
+		this.socket.on('coord', function(data) {
+			//this.coord = data;
+			//game.state.start('Game', true, false, this.coord);
+			game.state.start('Game', true, false, data);
+		});
 		this.socket.on('faltaUno', function(data) {
 			console.log('Falta un jugador');
 		});
 		this.socket.on('aJugar', function(data) {
 			for(var jug in data) {
 				console.log('aJugar: ', data[jug]);
-				juego.agregarJugador(data[jug].id, data[jug].x, data[jug].y, data[jug].veggie);
+				juego.agregarJugador(data[jug].id, data[jug].x, data[jug].y, data[jug].veg);
 			}
 		});
 		this.socket.on('final', function(data) {
@@ -38,6 +53,9 @@ function Cliente(){
 		});
 		this.socket.on('movimiento',function(data){ 
 		    juego.moverNave(data); 
+		});
+		this.socket.on('reset',function(data){ 
+		    juego.volverAJugar(data);
 		});
 	} // Fin lanzarSocketSrv
 	this.ini();

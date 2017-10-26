@@ -9,13 +9,15 @@ function Juego(){
     this.marcador;
     this.rival;
     this.preload=function() {
-       game.load.image('espacio', '../img/deep-space.jpg');
-       game.load.image('disparo', '../img/bullets.png');
-       game.load.image('nave', '../img/ship.png');
-       game.load.spritesheet('veggies', '../img/fruitnveg32wh37.png', 32, 32);
+        game.load.image('espacio', '../img/deep-space.jpg');
+        game.load.image('disparo', '../img/bullets.png');
+        game.load.image('nave', '../img/ship.png');
+        game.load.spritesheet('veggies', '../img/fruitnveg32wh37.png', 32, 32);
+        game.load.image('reset', '../img/reset.png');
     }
-    this.init=function(){
+    this.init=function(data){ //data es para coger las coordenadas
         game.stage.disableVisibilityChange = true;
+        this.coord = data;
     }
     this.create=function() {
         //  This will run in Canvas mode, so let's gain a little speed and display
@@ -26,23 +28,9 @@ function Juego(){
         //  A spacey background
         game.add.tileSprite(0, 0, game.width, game.height, 'espacio');
         this.veggies = game.add.physicsGroup();
-        for (var i = 0; i < 50; i++)
+        for (var i = 0; i < this.coord.length; i++)
         {
-            var c = this.veggies.create(game.rnd.between(10, 770), game.rnd.between(0, 570), 'veggies', game.rnd.between(0, 15));
-            c.body.mass = -100;
-        }
-        for (var i = 0; i < 50; i++)
-        {
-            var c = this.veggies.create(game.rnd.between(10, 770), game.rnd.between(0, 570), 'veggies', game.rnd.between(18, 35));
-            c.body.mass = -100;
-        }
-        for (var i = 0; i < 5; i++)
-        {
-            var c = this.veggies.create(game.rnd.between(10, 770), game.rnd.between(0, 570), 'veggies', 16);
-        }
-        for (var i = 0; i < 10; i++)
-        {
-            var c = this.veggies.create(game.rnd.between(10, 770), game.rnd.between(0, 570), 'veggies', 17);
+            var c = this.veggies.create(this.coord[i].x, this.coord[i].y, 'veggies', this.coord[i].veg);
         }
         //  Game input
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -60,7 +48,6 @@ function Juego(){
         //this.naves[id]=nave;        
 
     }
-
     this.collisionHandler = function(bullet, veg) { 
         if (veg.frame == this.naveLocal.veggie){ // Solo controlamos el pimiento, que es el numero 17
             console.log("ñam ñam"); // En caso de colision con algun grupo de hortaliza
@@ -71,11 +58,11 @@ function Juego(){
     this.processHandler = function(player, veg) {
         return true;
     }
-    this.update=function() {
+    this.update = function() {
         //var id=$.cookie("usr");
         var nave;
-        var id=cliente.id;
-        nave=this.naves[id];        
+        var id = cliente.id;
+        nave = this.naves[id];        
         //nave=this.nave;
         //var sprite=nave.sprite;
         if (!this.fin){
@@ -132,17 +119,26 @@ function Juego(){
         }
     }
 
-    this.moverNave=function(data){ 
-      var nave=this.naves[data.id];
-      nave.puntos=data.puntos;
+    this.moverNave = function(data){ 
+      var nave = this.naves[data.id];
+      nave.puntos = data.puntos;
       nave.mover(data.x,data.y,data.ang,true); 
-      this.rival=nave;
+      this.rival = nave;
       this.actualizarMarcador();
     }
 
     this.finalizar = function(data) {
         console.log('Ha ganado', data);
         this.fin = true;
+    }
+
+    this.volverAJugar=function(data){
+        cliente.reset();
+        this.fin=false;
+        this.naves={};
+        this.naveLocal=null;
+        this.coord=[];
+        game.state.start("Game",true,false,data);
     }
 
     this.screenWrap=function(sprite) {

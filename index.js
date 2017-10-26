@@ -31,20 +31,18 @@ app.get("/",function(request,response){
 // } 
 
 io.on('connection',function(socket){
-    socket.on('nuevoJugador',function(data){
+    socket.on('configuracion', function() {
+        juego.iniciar(socket);
+    });
+    socket.on('nuevoJugador', function(data){
        juego.agregarJugador(data.id, socket);
     });
-    socket.on('posicion',function(data){
-        // socket.jugador = {
-        //     id: data.id,
-        //     x: data.x,
-        //     y: data.y,
-        //     ang:data.ang
-        // };
-        // console.log("movimiento id:",socket.jugador.id," ",socket.jugador.x," ",socket.jugador.y);
-        // socket.broadcast.emit('movimiento',socket.jugador); 
+    socket.on('posicion', function(data){
         juego.movimiento(data, socket);
     });
+    socket.on('volverAJugar', function(data){
+        juego.volverAJugar(socket);
+    })
 }); // Fin io.on
 
 // function obtenerTodos(){
