@@ -5,11 +5,18 @@
     <!--Mi juego depende del paser
     	Importa el orden-->
     <script src="./lib/phaser.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js'></script>
      <script src="./src/cliente.js"></script>
     <script src="./src/asteroides.js"></script>  
     <script src="./src/ini.js"></script>
 </head>
 <body>
+	<div id="partida"></div>
+	<!--Id donde se va a insertar el phaser-->
+	<div id="espacio" align="center"></div> 
+	<script>
+		mostrarIntroducirPartida();
+	</script>
 </body>
 </html>

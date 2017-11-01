@@ -4,7 +4,7 @@
   "description": "no-hay-calabazas",
   "main": "index.js",
   "dependencies": {
-    "express": "^4.15.5",
+    "express": "^4.16.2",
     "socket.io": "^2.0.4"
   },
   "devDependencies": {},

@@ -1,4 +1,3 @@
-
 function Juego(){
     this.naves={};
     this.nave;
@@ -43,7 +42,7 @@ function Juego(){
         });
         this.marcador.anchor.setTo(0.5, 0.5);
         cliente.nuevoJugador();
-        
+
         //this.nave=new Nave(0,300,300);
         //this.naves[id]=nave;        
 
@@ -127,9 +126,10 @@ function Juego(){
       this.actualizarMarcador();
     }
 
-    this.finalizar = function(data) {
-        console.log('Ha ganado', data);
+    this.finalizar = function(id) {
+        console.log('Ha ganado', id);
         this.fin = true;
+        game.state.start("FinJuego", true, false, id, cliente.id);
     }
 
     this.volverAJugar=function(data){
@@ -164,6 +164,63 @@ function Juego(){
     }
 
     this.render=function() {
+    }
+}
+
+function removeGroup() {
+    game.world.remove(group);
+}
+
+function FinJuego(){
+    this.ganador;
+    this.idLocal;
+    this.init = function(id,idLocal) {    
+        //alert("Ganador: "+score)
+        this.ganador = id;
+        this.idLocal = idLocal;
+    };
+    this.create = function(){
+        //var gameOverTitle = game.add.sprite(160,160,"gameover");
+        //gameOverTitle.anchor.setTo(0.5,0.5);
+        game.add.tileSprite(0, 0, game.width, game.height, 'espacio');
+        var cadena = "";
+        if (this.ganador == this.idLocal) {
+            cadena = "Enhorabuena, ¡ERES EL GANADOR!";
+        }
+        else{
+            cadena = "Lo siento, tu rival te ha vencido"
+        }
+
+        var text2 = game.add.text(game.world.centerX, 180, cadena, {
+            font: "25px Arial",
+            fill: "#FDFEFE",
+            align: "center"
+        });
+        text2.anchor.setTo(0.5, 0.5); 
+
+       var text1 = game.add.text(game.world.centerX, 220, "¿Has encontrado alguna calabaza?", {
+            font: "25px Arial",
+            fill: "#FDFEFE",
+            align: "center"
+        });
+        text1.anchor.setTo(0.5, 0.5);    
+
+        //var text = game.add.bitmapText(400, 300, 'carrier_command', 'FIN JUEGO', 64);
+        var text = game.add.text(game.world.centerX, 300, 'FIN JUEGO', {
+            font: "25px Arial",
+            fill: "#FDFEFE",
+            align: "center"
+        });
+        text1.anchor.setTo(0.5, 0.5); 
+       
+        //text.anchor.x = 0.5;
+        //text.anchor.y = 0.5;
+
+        var playButton = game.add.button(400,420,"reset",this.volverAJugar,this);
+        playButton.anchor.setTo(0.5,0.5);
+    };
+    this.volverAJugar= function(){
+        cliente.volverAJugar();
     }
 }
 

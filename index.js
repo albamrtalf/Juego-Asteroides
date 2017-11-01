@@ -1,7 +1,4 @@
 var fs=require("fs");
-//var config=JSON.parse(fs.readFileSync("config.json"));
-//var host=config.host;
-//var port=config.port;
 var exp=require("express");
 var app=exp(); // El tutorial indicaba exp.createServer()
 var http = require('http').Server(app);
@@ -12,9 +9,6 @@ var juego = new modelo.Juego(); // Importo juego
 app.use(exp.static(__dirname + "/cliente"));
 
 app.set('port', (process.env.PORT || 5000));
-http.listen(app.set('port'), function(){
-    console.log('Servidor escuchando en ', app.get('port'));
-});
 
 // El get() que hace el navegador al servidor
 app.get("/",function(request,response){
@@ -22,27 +16,44 @@ app.get("/",function(request,response){
 	response.setHeader("Content-Type", "text/html");
 	response.send(contenido);
 });
+/**
+app.get('/obtenerPartidas', function(request, response) {
+    juego.obtenerPartidas(function(lista){
+        response.send(lista);        
+    });
+});
+**/
 
-//console.log("Servidor escuchando en "+host+":"+port);
-//http.listen(port,host);
-
-// function randomInt(low, hight){
-// 	return Math.floor(Math.random() * (hight - low) + low);
-// } 
+http.listen(app.set('port'), function(){
+    console.log('Servidor escuchando en ', app.get('port'));
+});
 
 io.on('connection',function(socket){
-    socket.on('configuracion', function() {
-        juego.iniciar(socket);
+    socket.on('room', function(room) {
+        console.log('nuevo cliente: ', room);
+        juego.nuevaPartida(room, socket);
     });
-    socket.on('nuevoJugador', function(data){
-       juego.agregarJugador(data.id, socket);
-    });
-    socket.on('posicion', function(data){
-        juego.movimiento(data, socket);
-    });
-    socket.on('volverAJugar', function(data){
-        juego.volverAJugar(socket);
+    /**socket.on('unirme',function(room){
+        //console.log(juego.partidas);
+        juego.unirme(room,socket);
+    });**/
+    socket.on('configuracion',function(room){
+        // console.log(juego.partidas);
+       juego.partidas[room].iniciar(socket,io);
     })
+    socket.on('nuevoJugador', function(data){
+       // juego.agregarJugador(data.id, socket);
+       juego.partidas[data.room].agregarJugador(data.id, socket);
+    });
+    socket.on('posicion', function(room, data){
+        // juego.movimiento(data, socket);
+        juego.partidas[room].movimiento(data, socket);
+    });
+    socket.on('volverAJugar', function(room){
+        // juego.volverAJugar(socket)
+        console.log(juego.partidas[room]);
+        juego.partidas[room].volverAJugar(socket);
+    });
 }); // Fin io.on
 
 // function obtenerTodos(){
